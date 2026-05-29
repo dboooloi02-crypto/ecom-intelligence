@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Shopee Scout</title><link rel="stylesheet" href="popup.css"></head>
+<body><div class="app">
+<div class="header"><h2>Shopee Scout</h2><span id="urlDisplay" class="url-hint">未检测到Shopee页面</span></div>
+<div class="actions"><button id="extractBtn" disabled class="btn-primary">提取当前页商品</button></div>
+<div id="status" class="status">等待操作...</div>
+<div id="resultArea" style="display:none">
+<div class="summary"><span id="count">0</span>件 <span id="sourceBadge" class="badge" style="display:none"></span><button id="exportBtn" class="btn-small">导出CSV</button></div>
+<div id="tableWrap"><table><thead><tr><th>#</th><th>商品名</th><th>价格</th><th>销量</th><th>评分</th><th>地址</th></tr></thead><tbody id="tableBody"></tbody></table></div>
+</div></div><script src="popup.js"></script></body></html>
