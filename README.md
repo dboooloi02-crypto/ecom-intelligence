@@ -1,57 +1,29 @@
-# ecom-intelligence
+# 选品决策助手 (ecom-intelligence)
 
-**AI跨境研究员 — 输入一句话，自动生成市场研究报告**
+AI 驱动的跨境电商选品分析工具。输入关键词 → 自动分析市场数据 → 输出评分和推荐等级。
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.133-009688?logo=fastapi)](https://fastapi.org)
-[![DuckDB](https://img.shields.io/badge/DuckDB-1.0-yellow?logo=duckdb)](https://duckdb.org)
+## 功能
 
-> 跨境电商版 Deep Research + Accio Work  
-> 不是选品工具，是 **AI跨境研究员**
+- **Shopee 实时数据** — Chrome 扩展一键提取商品数据，发送到本地分析引擎
+- **CSV 导入** — 导入已有商品数据，自动评分
+- **规则引擎评分** — 多维权重计算（销量/价格/评分/竞争/利润），生成推荐/观察/放弃评级
+- **本地服务** — 扩展数据通过 HTTP API 推送到本地 GUI
 
----
-
-## 🚀 Quick Start
+## 快速开始
 
 ```bash
-git clone https://github.com/dboooloi02-crypto/ecom-intelligence.git
-cd ecom-intelligence
-uvicorn backend.api.main:app --host 0.0.0.0 --port 8000
-# 前端: cd frontend && python3 -m http.server 5500 → http://localhost:5500
+pip install -r requirements.txt
+python main.py
 ```
 
-**不需要 API Key，不需要数据库，开箱即用。**
+## Chrome 扩展
 
----
+安装 Chrome 扩展后打开 Shopee TW 搜索页：
+1. `chrome://extensions` → 开发者模式 → 加载已解压的扩展
+2. 选择 `shopee-extension` 文件夹
+3. 搜索商品 → 点扩展图标 → 提取 → 发送到选品助手
 
-## 🎯 一句话研究
+## 技术栈
 
-输入 `分析台湾宠物用品市场` → 60秒输出：市场规模、热门TOP5、竞争分析、推荐产品
-
-## 🏗 架构
-
-```
-用户一句话 → Agent Orchestrator → Collector → Scorer → Report
-```
-
-### 目录
-
-```
-agent/          # Agent 核心（orchestrator/planner/memory/researcher）
-collectors/     # 数据采集（base/shopee/lazada/tiktok）
-ai/             # AI能力（scorer/report/embeddings）
-backend/api/    # FastAPI
-frontend/       # 聊天式UI
-db/             # DuckDB + Qdrant（预留）
-```
-
-## 🔧 设计原则
-
-1. 先冻结架构，后写代码  
-2. Fake Collector先跑通全链路  
-3. V1不上LangGraph，简单串行  
-4. AI研究员 > 选品工具
-
-## 🛤 Roadmap
-
-V1 ✅ AI选品助手 → V2 Deep Research → V3 竞品监控 → V4 Agent Browser → V5 内容生成 → V6 全自动运营
+- Python 3.12 / PySide6 / Flask
+- Chrome Extension MV3
