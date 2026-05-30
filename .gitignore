@@ -1,5 +1,10 @@
+.venv/
+venv/
 __pycache__/
 *.pyc
 .env
-data/*.db
-.DS_Store
+*.duckdb
+*.parquet
+dist/
+node_modules/
+.next/
