@@ -1,13 +1,13 @@
 # ecom-intelligence
 
-**AI-powered cross-border e-commerce intelligence pipeline**
-
-Collect → Analyze → Visualize — with your own browser session, zero 403 risk.
+**AI跨境研究员 — 输入一句话，自动生成市场研究报告**
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.133-009688?logo=fastapi)](https://fastapi.org)
 [![DuckDB](https://img.shields.io/badge/DuckDB-1.0-yellow?logo=duckdb)](https://duckdb.org)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.30-red?logo=streamlit)](https://streamlit.io)
+
+> 跨境电商版 Deep Research + Accio Work  
+> 不是选品工具，是 **AI跨境研究员**
 
 ---
 
@@ -16,120 +16,42 @@ Collect → Analyze → Visualize — with your own browser session, zero 403 ri
 ```bash
 git clone https://github.com/dboooloi02-crypto/ecom-intelligence.git
 cd ecom-intelligence
-pip install -r requirements.txt
-python demo.py
+uvicorn backend.api.main:app --host 0.0.0.0 --port 8000
+# 前端: cd frontend && python3 -m http.server 5500 → http://localhost:5500
 ```
 
-You'll see 30 real-world Shopee products scored by AI. **No API keys needed.**
-
-Interactive dashboard:
-```bash
-streamlit run dashboard/app.py
-```
-
-Or with Docker:
-```bash
-docker compose up
-# → http://localhost:8501
-```
+**不需要 API Key，不需要数据库，开箱即用。**
 
 ---
 
-## 🏗 Architecture
+## 🎯 一句话研究
+
+输入 `分析台湾宠物用品市场` → 60秒输出：市场规模、热门TOP5、竞争分析、推荐产品
+
+## 🏗 架构
 
 ```
-Chrome Extension               Python Backend                  Dashboard
-┌──────────────┐              ┌───────────────────┐          ┌──────────┐
-│ API Intercept│──JSON/CSV──→│ Collector→DuckDB   │──→       │Streamlit │
-│ SSR Extract  │              │         ↓         │          │Rankings  │
-│ DOM Fallback │              │ DSPy + LLM Score  │          │Charts    │
-└──────────────┘              └───────────────────┘          └──────────┘
+用户一句话 → Agent Orchestrator → Collector → Scorer → Report
 ```
 
-**Core design: Zero 403 risk.** The extension uses your own browser session — Shopee sees traffic identical to normal browsing.
-
----
-
-## ✨ Features
-
-- **7 Shopee domains** + xiapibuy (TW/MY/TH/VN/ID/PH/SG)
-- **Triple extraction**: API intercept → SSR JSON → DOM fallback
-- **DuckDB storage**: columnar DB, historical trend queries
-- **DSPy AI scoring**: programmatic LM programming (Zhipu/DeepSeek)
-- **Mock scorer included**: works immediately without API keys
-- **Streamlit dashboard**: rankings, charts, KPI cards
-- **Docker**: one-command deploy
-
----
-
-## 📁 Structure
+### 目录
 
 ```
-ecom-intelligence/
-├── extension/              # Chrome Extension (Manifest V3)
-│   ├── content/content.js      # API interception + DOM
-│   ├── content/extract.js      # SSR→API→DOM triple fallback
-│   └── popup/                  # UI + CSV export
-├── backend/
-│   ├── collectors/             # Data parsing
-│   ├── pipelines/              # AI scoring
-│   └── storage/                # DuckDB
-├── dashboard/app.py           # Streamlit
-├── examples/shopee_sample.csv # 30 products
-├── prompts/product_score.txt  # AI prompt
-├── demo.py                    # Zero-setup demo
-├── docker-compose.yml
-├── Dockerfile
-├── requirements.txt
-├── .env.example
-└── README.md
+agent/          # Agent 核心（orchestrator/planner/memory/researcher）
+collectors/     # 数据采集（base/shopee/lazada/tiktok）
+ai/             # AI能力（scorer/report/embeddings）
+backend/api/    # FastAPI
+frontend/       # 聊天式UI
+db/             # DuckDB + Qdrant（预留）
 ```
 
----
+## 🔧 设计原则
 
-## 🔧 Triple Extraction
-
-| Layer | Method | Data |
-|-------|--------|------|
-| 1 | fetch/XHR API intercept | Full (rating, stock, likes) |
-| 2 | SSR JSON (__INITIAL_STATE__) | Basic product data |
-| 3 | DOM extraction (data-sqe) | Partial (fallback) |
-
-```javascript
-// API interception — monitor, don't modify
-const originalFetch = window.fetch;
-window.fetch = async function(...args) {
-  const response = await originalFetch.apply(this, args);
-  if (url.includes('search_items')) {
-    captureProducts(await response.clone().json());
-  }
-  return response; // pass through transparently
-};
-```
-
----
-
-## 🧪 Data Sources
-
-| Source | API Key | Extension | Description |
-|--------|:------:|:---------:|-------------|
-| Sample CSV | ❌ | ❌ | 30 products, ready to go |
-| CSV upload | ❌ | ❌ | Your own data |
-| Extension | ❌ | ✅ | Live from Shopee |
-| DuckDB | ❌ | ✅ | Historical data |
-
----
+1. 先冻结架构，后写代码  
+2. Fake Collector先跑通全链路  
+3. V1不上LangGraph，简单串行  
+4. AI研究员 > 选品工具
 
 ## 🛤 Roadmap
 
-- [x] v0.1 — Demo + mock scorer + Streamlit dashboard
-- [ ] v0.2 — Real DSPy + Zhipu integration
-- [ ] v0.3 — Chrome extension packaging
-- [ ] v0.4 — Docker production profile
-- [ ] v0.5 — Multi-keyword trend tracking
-
----
-
-## 📃 License
-
-MIT
+V1 ✅ AI选品助手 → V2 Deep Research → V3 竞品监控 → V4 Agent Browser → V5 内容生成 → V6 全自动运营
